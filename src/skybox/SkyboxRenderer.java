@@ -13,7 +13,7 @@ import renderEngine.Loader;
 
 public class SkyboxRenderer {
 	
-	private static final float SIZE = 500f;
+	private static final float SIZE = 50000f;
 	
 	private static final float[] VERTICES = {        
 	    -SIZE,  SIZE, -SIZE,
@@ -94,11 +94,13 @@ public class SkyboxRenderer {
 	
 	private void bindTextures() {
 		time += DisplayManager.getFrameTimeSeconds() * 1000;
-		time %= 24000;
+		time %= 240000;
 		int texture1;
 		int texture2;
-		float blendFactor;
-		if(time >= 0 & time < 5000) {
+		float blendFactor=1f;
+		texture1 = texture;
+		texture2 = texture;
+		/*if(time >= 0 & time < 5000) {
 			texture1 = nightTexture;
 			texture2 = nightTexture;
 			blendFactor = (time - 0)/(5000 - 0);
@@ -114,7 +116,7 @@ public class SkyboxRenderer {
 			texture1 = texture;
 			texture2 = nightTexture;
 			blendFactor = (time - 21000)/(24000 - 21000);
-		}
+		}*/
 		
 		
 		GL13.glActiveTexture(GL13.GL_TEXTURE0);

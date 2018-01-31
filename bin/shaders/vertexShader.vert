@@ -21,8 +21,8 @@ uniform float useFakeLighting;
 uniform float numberOfRows;
 uniform vec2 offset;
 
-const float density = 0.007f; //= 0.0035f; out in the distance fog // the amount of fog
-const float gradient = 1.5f; // =5.0f; out in the distance fog// how quickly visibility decreases with distance
+const float density = 0.00035f; //= 0.0035f; out in the distance fog // the amount of fog
+const float gradient = 50.5f; // =5.0f; out in the distance fog// how quickly visibility decreases with distance
 
 uniform vec4 plane;
 

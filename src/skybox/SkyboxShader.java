@@ -13,7 +13,7 @@ public class SkyboxShader extends ShaderProgram {
 	private static final String VERTEX_FILE = "/skybox/skyboxVertexShader.vert";
 	private static final String FRAGMENT_FILE = "/skybox/skyboxFragmentShader.frag";
 	
-	private static final float ROTATE_SPEED = 1f;
+	private static final float ROTATE_SPEED = 0.1f;
 	
 	private int location_projectionMatrix;
 	private int location_viewMatrix;

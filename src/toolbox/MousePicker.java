@@ -8,6 +8,8 @@ import org.lwjgl.util.vector.Vector3f;
 import org.lwjgl.util.vector.Vector4f;
 
 import entities.Camera;
+import entities.Entity;
+import entities.Light;
 import terrains.Terrain;
 
 public class MousePicker {
@@ -152,7 +154,17 @@ public class MousePicker {
 		private Terrain getTerrain(float worldX, float worldZ) {
 			return terrain;
 		}
-
+		
+		public static void mousePickerTutorial(MousePicker picker, Entity lampEntity, Light light) {
+			// Mouse picker
+			picker.update(); // update after camera has moved
+			System.out.println(picker.getCurrentRay());
+			Vector3f terrainPoint = picker.getCurrentTerrainPoint();
+			if (terrainPoint != null) {
+				lampEntity.setPosition(terrainPoint);
+				light.setPosition(new Vector3f(terrainPoint.x,terrainPoint.y+13,terrainPoint.z+5));
+			}
+		}
 	
 	
 }

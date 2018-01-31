@@ -24,7 +24,7 @@ public class MasterRenderer {
 
 	private static final float FOV = 70;
 	private static final float NEAR_PLANE = 0.1f;
-	private static final float FAR_PLANE = 1000.0f;
+	private static final float FAR_PLANE = 100000.0f;
 	
 	// sky colors/ fog color
 	public static final float RED = 0.5f;

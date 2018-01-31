@@ -16,8 +16,8 @@ uniform mat4 projectionMatrix;		//the frustum
 uniform mat4 viewMatrix;			// position in respect to the world
 uniform vec3 lightPosition[4];
 
-const float density = 0.007f; //= 0.0035f; out in the distance fog // the amount of fog
-const float gradient = 1.5f; // =5.0f; out in the distance fog// how quickly visibility decreases with distance
+const float density = 0.00035f; //= 0.0035f; out in the distance fog // the amount of fog
+const float gradient = 50.5f; // =5.0f; out in the distance fog// how quickly visibility decreases with distance
 
 uniform vec4 plane;
 
