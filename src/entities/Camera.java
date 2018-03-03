@@ -9,16 +9,17 @@ public class Camera {
 	private final int RIGHT_MOUSE_BUTTON = 1;
 	private final int LEFT_MOUSE_BUTTON = 0;
 	
-	private float distanceFromPlayer = 50;
+	private float distanceFromPlayer = 100;
 	private float angleAroundPlayer = 0;
 	
 	private Vector3f position = new Vector3f(0.0f,0.0f,0.0f);
-	private float pitch = 20;
+	private float pitch = 23;
 	private float yaw;
 	private float roll;
 	
 	private Player player;
 	
+	public Camera() {};
 	public Camera(Player player) {
 		this.player = player;
 	}

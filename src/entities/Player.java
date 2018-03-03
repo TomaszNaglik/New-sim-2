@@ -9,10 +9,11 @@ import terrains.Terrain;
 
 public class Player extends Entity {
 	
-	private static final float RUN_SPEED = 20;
-	private static final float TURN_SPEED = 160;
-	private static final float GRAVITY = -50;
+	private static final float RUN_SPEED = 1000;
+	private static final float TURN_SPEED = 180;
+	private static final float GRAVITY = -100;
 	private static final float JUMP_POWER = 30;
+	private static final double PRECISION=0.00000000001;
 	
 	//private static final float TERRAIN_HEIGHT = 0;
 	
@@ -36,19 +37,20 @@ public class Player extends Entity {
 		upwardsSpeed += GRAVITY * DisplayManager.getFrameTimeSeconds(); // gravity per second (the number of seconds that have passed)
 		
 		float terrainHeight = terrain.getHeightOfTerrain(super.getPosition().x, super.getPosition().z);
-		if (super.getPosition().y < terrainHeight) {
+		if (super.getPosition().y - terrainHeight < PRECISION) {
 			upwardsSpeed = 0;
 			isInAir = false;
 			super.getPosition().y = terrainHeight;
 		}
 		
-		super.increasePosition(dx, upwardsSpeed * DisplayManager.getFrameTimeSeconds(), dz); // upwards speed per second  (the number of seconds that have passed)
+		super.increasePosition(dx, 0*upwardsSpeed * DisplayManager.getFrameTimeSeconds(), dz); // upwards speed per second  (the number of seconds that have passed)
 		
 	}
 	
 	
 	private void jump() {
 		if (!isInAir) {
+			this.getPosition().y+=PRECISION*2;
 		this.upwardsSpeed = JUMP_POWER;
 		isInAir = true;
 		}
@@ -56,19 +58,19 @@ public class Player extends Entity {
 	
 	
 	private void checkInputs() {
-		if (Keyboard.isKeyDown(Keyboard.KEY_W)) {
+		if (Keyboard.isKeyDown(Keyboard.KEY_UP)) {
 			this.currentSpeed = RUN_SPEED;
 		}
-		else if (Keyboard.isKeyDown(Keyboard.KEY_S)) {
+		else if (Keyboard.isKeyDown(Keyboard.KEY_DOWN)) {
 			this.currentSpeed = -RUN_SPEED;
 		}else {
 			this.currentSpeed = 0;
 		}
 		
-		if (Keyboard.isKeyDown(Keyboard.KEY_D)) {
+		if (Keyboard.isKeyDown(Keyboard.KEY_RIGHT)) {
 			this.currentTurnSpeed = -TURN_SPEED;
 		}
-		else if (Keyboard.isKeyDown(Keyboard.KEY_A)) {
+		else if (Keyboard.isKeyDown(Keyboard.KEY_LEFT)) {
 			this.currentTurnSpeed = TURN_SPEED;
 		}else {
 			this.currentTurnSpeed = 0;

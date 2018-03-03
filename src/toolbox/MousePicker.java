@@ -11,6 +11,7 @@ import entities.Camera;
 import entities.Entity;
 import entities.Light;
 import terrains.Terrain;
+import terrains.World;
 
 public class MousePicker {
 	
@@ -23,15 +24,15 @@ public class MousePicker {
 	private Matrix4f viewMatrix;
 	private Camera camera;
 	
-	private Terrain terrain;
+	private World world;
 	private Vector3f currentTerrainPoint;
 	
 	// for multiple terrain it is Terrain[][] terrain
-	public MousePicker(Camera cam, Matrix4f projection, Terrain terrain) {
+	public MousePicker(Camera cam, Matrix4f projection, World world) {
 		this.camera = cam;
 		this.projectionMatrix = projection;
 		this.viewMatrix = Maths.createViewMatrix(camera);
-		this.terrain = terrain;
+		this.world = world;
 	}
 	
 	public Vector3f getCurrentTerrainPoint() {
@@ -152,7 +153,7 @@ public class MousePicker {
 		 * return terrains[x][z];
 		 */
 		private Terrain getTerrain(float worldX, float worldZ) {
-			return terrain;
+			return world.selectTerrain(worldX, worldZ);
 		}
 		
 		public static void mousePickerTutorial(MousePicker picker, Entity lampEntity, Light light) {

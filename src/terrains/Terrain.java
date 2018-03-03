@@ -17,7 +17,7 @@ import toolbox.Maths;
 
 public class Terrain {
 
-	private static final float SIZE = 800;
+	public static final float SIZE = 1000;
 	private static final float MAX_HEIGHT = 40;
 	//private static final float MIN_HEIGHT = -40;
 	private static final float MAX_PIXEL_COLOR = 256 * 256 * 256;
@@ -28,15 +28,19 @@ public class Terrain {
 	private TerrainTexturePack texturePack;
 	private TerrainTexture blendMap;
 	
+	
+	
 	private float[][] heights;
 	
-	public Terrain(int gridX, int gridZ, Loader loader, TerrainTexturePack texturePack, 
-			TerrainTexture blendMap, String heightMap) {
+	public Terrain(float gridX, float gridZ, Loader loader, TerrainTexturePack texturePack, 
+			TerrainTexture blendMap, float[][] heights) {
+		
 		this.texturePack = texturePack;
 		this.blendMap = blendMap;
 		this.x = gridX * SIZE;
 		this.z = gridZ * SIZE;
-		this.model = generateTerrain(loader, heightMap);
+		this.heights=heights;
+		this.model = generateTerrain(loader);
 		
 	}
 	
@@ -62,13 +66,13 @@ public class Terrain {
 	}
 	
 	public float getHeightOfTerrain(float worldX, float worldZ) {
-		float terrainX = worldX - this.x;
-		float terrainZ = worldZ- this.z;
+		float terrainX = worldX;// - this.x;
+		float terrainZ = worldZ;//- this.z;
 		float gridSquareSize = SIZE / ((float)heights.length - 1);
-		int gridX = (int) Math.floor(terrainX / gridSquareSize);
-		int gridZ = (int) Math.floor(terrainZ / gridSquareSize);
+		int gridX = (int) worldX;//(int) Math.floor(terrainX / gridSquareSize);
+		int gridZ = (int) worldZ;//(int) Math.floor(terrainZ / gridSquareSize);
 		
-		if (gridX >= heights.length - 1 || gridZ >= heights.length - 1 || gridX < 0 || gridZ < 0) {
+		if (worldX >= heights.length+1  || worldZ >= heights[0].length+1 || worldX < 0 || worldZ < 0) {
 			return 0;
 		}
 		
@@ -91,16 +95,23 @@ public class Terrain {
 		return answer;
 	}
 
-	private RawModel generateTerrain(Loader loader, String heightMap){
+	private RawModel generateTerrain(Loader loader){
 		
+		
+		
+		int VERTEX_COUNT = 128;//image.getHeight();
+		
+		HeightsGenerator generator = new HeightsGenerator();
+		/*Noise noise = new Noise();
+		float map[][] = noise.generateNoiseMap(VERTEX_COUNT, VERTEX_COUNT, scale, octaves, persistance, lacune);
 		BufferedImage image = null;
 		try {
 			image = ImageIO.read(Class.class.getResourceAsStream("/res/" + heightMap + ".png"));
 		} catch (IOException e) {
 			e.printStackTrace();
-		}
-		int VERTEX_COUNT = image.getHeight();
-		heights = new float[VERTEX_COUNT][VERTEX_COUNT];
+		}*/
+		
+		//heights = new float[VERTEX_COUNT][VERTEX_COUNT];
 		int count = VERTEX_COUNT * VERTEX_COUNT;
 		float[] vertices = new float[count * 3];
 		float[] normals = new float[count * 3];
@@ -110,11 +121,12 @@ public class Terrain {
 		for(int i=0;i<VERTEX_COUNT;i++){
 			for(int j=0;j<VERTEX_COUNT;j++){
 				vertices[vertexPointer*3] = (float)j/((float)VERTEX_COUNT - 1) * SIZE;
-				float height = getHeight(j, i, image);
-				heights[j][i] = height;
-				vertices[vertexPointer*3+1] = height;
+				//float height = getHeight(j, i, generator);
+				//float height = map[i][j];
+				//heights[j][i] = height;
+				vertices[vertexPointer*3+1] = heights[(int) (x+j)][(int) (z+i)];
 				vertices[vertexPointer*3+2] = (float)i/((float)VERTEX_COUNT - 1) * SIZE;
-				Vector3f normal = calculateNormal(j, i, image);
+				Vector3f normal = calculateNormal(j, i, generator);
 				normals[vertexPointer*3] = normal.x;
 				normals[vertexPointer*3+1] = normal.y;
 				normals[vertexPointer*3+2] = normal.z;
@@ -141,27 +153,47 @@ public class Terrain {
 		return loader.loadToVAO(vertices, textureCoords, normals, indices);
 	}
 	
-	private Vector3f calculateNormal(int x, int z, BufferedImage image) {
-		float heightL = getHeight(x - 1, z, image);
-		float heightR = getHeight(x + 1, z, image);
-		float heightD = getHeight(x, z - 1, image);
-		float heightU = getHeight(x, z + 1, image);
+	private Vector3f calculateNormal(int x, int z, HeightsGenerator generator) {
+		float heightL = getHeight(x - 1, z, generator);
+		float heightR = getHeight(x + 1, z, generator);
+		float heightD = getHeight(x, z - 1, generator);
+		float heightU = getHeight(x, z + 1, generator);
 		Vector3f normal = new Vector3f(heightL - heightR, 2.0f, heightD - heightU);
 		normal.normalise();
 		return normal;
 	}
 	
+	private Vector3f calculateNormal(int x, int z, float[][] generator) {
+		float heightL = getHeight(x - 1, z, generator);
+		float heightR = getHeight(x + 1, z, generator);
+		 float heightD = getHeight(x, z - 1, generator);
+		float heightU = getHeight(x, z + 1, generator);
+		Vector3f normal = new Vector3f(heightL - heightR, 2.0f, heightD - heightU);
+		normal.normalise();
+		return normal;
+	}
 	
-	
+private float getHeight(int x, int z, float[][] generator) {
+		
+	System.out.println(x+" "+z+ " "+generator.length);
+	if(x<0 || x>generator.length-1 || z<0 || z>generator[0].length-1)
+		return 0f;
+		return generator[x][z];
+}
 	// darker the spot the lower the spot
-	private float getHeight(int x, int z, BufferedImage image) {
-		if (x < 0 || x >= image.getHeight() || z < 0 || z >= image.getHeight()) {
+	private float getHeight(int x, int z, HeightsGenerator generator) {
+		
+		return generator.generateHeight(x, z);
+		
+		/*if (x < 0 || x >= image.getHeight() || z < 0 || z >= image.getHeight()) {
 			return 0;
 		}
 		float height = image.getRGB(x, z);
 		height += MAX_PIXEL_COLOR / 2.0f;
 		height /= MAX_PIXEL_COLOR / 2.0f;
 		height *= MAX_HEIGHT;
-		return height;
+		return height;*/
 	}
+
+
 }

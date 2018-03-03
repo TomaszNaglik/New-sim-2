@@ -13,7 +13,7 @@ uniform mat4 modelMatrix;
 uniform vec3 cameraPosition;
 uniform vec3 lightPosition;
 
-const float tiling = 4.0f;
+const float tiling = 4000.0f;
 
 
 void main(void) {

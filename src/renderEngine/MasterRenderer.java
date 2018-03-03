@@ -27,9 +27,9 @@ public class MasterRenderer {
 	private static final float FAR_PLANE = 100000.0f;
 	
 	// sky colors/ fog color
-	public static final float RED = 0.5f;
-	public static final float GREEN = 0.5f;
-	public static final float BLUE = 0.5f;
+	public static final float RED = 0.9f;
+	public static final float GREEN = 0.9f;
+	public static final float BLUE = 0.9f;
 	
 	private Matrix4f projectionMatrix;
 	
@@ -69,10 +69,11 @@ public class MasterRenderer {
 		return projectionMatrix;
 	}
 	
-	public void renderScene(List<Entity> entities, List<Entity> normalEntities, List<Terrain> terrains, List<Light> lights, 
+	public void renderScene(List<Entity> entities, List<Entity> normalEntities, Terrain[][] terrains, List<Light> lights, 
 			Camera camera, Vector4f clipPlane) {
-		for (Terrain terrain : terrains) {
-			processTerrain(terrain);
+		for (Terrain[] terrain : terrains) {
+			for(Terrain t:terrain)
+			processTerrain(t);
 		}
 		for (Entity entity : entities) {
 			processEntity(entity);
